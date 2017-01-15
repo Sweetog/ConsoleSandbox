@@ -15,7 +15,7 @@ namespace ConsoleApplication1
 {
     class Program
     {
-        static bool TT<T>(T t)
+        static bool T<T>(T t)
         {
             return typeof(T) != t.GetType();
         }
@@ -27,12 +27,9 @@ namespace ConsoleApplication1
             var sw = new Stopwatch();
             sw.Start();
 
-            string s;
-
-
             try
             {
-                var test = s;
+                MainHashTable();
             }
             catch (Exception ex)
             {

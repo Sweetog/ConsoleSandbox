@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ConsoleApplication1.DataStructures
 {
-    public partial class HashTable<T>
+    public class HashTable<T>
     {
         private int _tableSize = 25;
         private HashTableItem<T>[] _hashTable;
@@ -222,7 +222,7 @@ namespace ConsoleApplication1.DataStructures
                 hash += (int)chars[i];
             }
 
-            return hash %= _tableSize;
+            return hash % _tableSize;
         }
 
     }
