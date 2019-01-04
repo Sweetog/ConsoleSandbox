@@ -2,14 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Numerics;
 using ConsoleApplication1.DataStructures;
 using ConsoleApplication1.DataStructures.IntervalTreeLib;
 using ConsoleApplication1.Utility;
-using System.Numerics;
-using System.Text;
 
 namespace ConsoleApplication1
 {
@@ -20,29 +17,133 @@ namespace ConsoleApplication1
             return typeof(T) != t.GetType();
         }
 
-
-
         static void Main(string[] args)
+        {
+            RunStandard();
+            //RunPairsTest();
+        }
+
+        static void RunStandard()
         {
             var sw = new Stopwatch();
             sw.Start();
 
-            try
-            {
-                MainHashTable();
-            }
-            catch (Exception ex)
-            {
-                
-            }
+            //do work
 
             sw.Stop();
-            Console.WriteLine(string.Empty);
-            Console.WriteLine(string.Empty);
-            Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
+
+            Console.WriteLine("Time Elapsed O(n): {0}", sw.Elapsed);
+
+            Console.Read();
+        }
+        
+        static void RunPairsTest()
+        {
+            var sw = new Stopwatch();
+
+            int[] tests = { 1, 2, 1, 0 };
+            int k = 96;
+
+            const int arrSize = 1000;
+            int[] test = new int[arrSize];
+
+            test[0] = 0;
+            for (var i = 0; i < arrSize; i++)
+            {
+
+                test[i] = test[i] + i;
+            }
+
+            sw.Start();
+            var ret = DistinctPairs(test, k);
+            sw.Stop();
+            Console.WriteLine($"O(n2) = {ret}");
+            Console.WriteLine("Time Elapsed O(n2): {0}", sw.Elapsed);
+
+
+            sw.Start();
+            var ret2 = DistinctPairsOofN(test, k);
+            sw.Stop();
+            Console.WriteLine($"O(n) = {ret2}");
+            Console.WriteLine("Time Elapsed O(n): {0}", sw.Elapsed);
+
+            Console.Read();
         }
 
-        static void insertionSort(int[] ar)
+        static int DistinctPairsOofN(int[] a, int k)
+        {
+            Dictionary<int, int> freqm = new Dictionary<int, int>();
+            HashSet<int> ht = new HashSet<int>();
+
+            foreach (var elem in a)
+            {
+                if (!freqm.ContainsKey(elem))
+                {
+                    freqm.Add(elem, 1);
+                    ht.Add(elem);
+                    continue;
+                }
+
+                freqm[elem] = ++freqm[elem];
+            }
+
+            var count = 0;
+            foreach (var elem in ht)
+            {
+                var x = k - elem; //another way of saying x + elem = k
+
+                if (!freqm.ContainsKey(x)) continue;
+
+                //do not count unless the elem occurs more than once in the array
+                if (elem == x && freqm[x] == 1) continue;
+
+                count++;
+                freqm.Remove(x);
+                freqm.Remove(elem);
+
+            }
+
+            return count;
+        }
+
+
+        static int DistinctPairs(int[] a, long sum)
+        {
+            HashSet<string> ht = new HashSet<string>();
+            int count = 0;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = i + 1; j < a.Length; j++)
+                {
+                    var x = a[i];
+                    var y = a[j];
+
+                    if (x + y != sum) continue;
+
+                    if (ht.Contains($"{x},{y}") || ht.Contains($"{y},{x}")) continue;
+
+                    ht.Add($"{x},{y}");
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+
+        static void OddNumbers(int l, int r)
+        {
+            for (int i = l; l <= r; i++)
+            {
+                if (i % 2 == 1)
+                {
+                    Console.WriteLine(i);
+                }
+            }
+        }
+
+        static void InsertionSort(int[] ar)
         {
             for (var i = ar.Length - 2; i >= 0; i--)
             {
@@ -256,7 +357,7 @@ namespace ConsoleApplication1
 
         static void BuyHighSellLow()
         {
-            var data = new int[] { 10, 5, 3, 5, 1, 20 };
+            var data = new[] { 10, 5, 3, 5, 1, 20 };
 
 
             var low = data[0];
@@ -307,19 +408,19 @@ namespace ConsoleApplication1
         {
             var goldPlate4x4 = new int[4][];
 
-            goldPlate4x4[0] = new int[] { 3, 2, 9, 4 };
-            goldPlate4x4[1] = new int[] { 1, 7, 5, 3 };
-            goldPlate4x4[2] = new int[] { 2, 4, 6, 9 };
-            goldPlate4x4[3] = new int[] { 1, 6, 2, 5 };
+            goldPlate4x4[0] = new[] { 3, 2, 9, 4 };
+            goldPlate4x4[1] = new[] { 1, 7, 5, 3 };
+            goldPlate4x4[2] = new[] { 2, 4, 6, 9 };
+            goldPlate4x4[3] = new[] { 1, 6, 2, 5 };
 
             var goldPlate3x3 = new int[3][];
 
             //{ 3, 2, 5 }
             //{ 1, 7, 4 }
             //{ 8, 2, 1 }
-            goldPlate3x3[0] = new int[] { 3, 2, 5 };
-            goldPlate3x3[1] = new int[] { 1, 7, 4 };
-            goldPlate3x3[2] = new int[] { 8, 2, 1 };
+            goldPlate3x3[0] = new[] { 3, 2, 5 };
+            goldPlate3x3[1] = new[] { 1, 7, 4 };
+            goldPlate3x3[2] = new[] { 8, 2, 1 };
 
             Console.WriteLine("How much Gold: {0}", UtilityCore.BestPathGet(goldPlate3x3));
         }
@@ -379,7 +480,7 @@ namespace ConsoleApplication1
         {
             if (i1 < i2)
                 return 1;
-            else if (i1 > i2)
+            if (i1 > i2)
                 return -1;
             return 0;
         }
@@ -420,7 +521,7 @@ namespace ConsoleApplication1
             //====================================================================
             //Worst Case for 8 elements
             //====================================================================
-            var worstCase = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+            var worstCase = new[] { 0, 1, 2, 3, 4, 5, 6, 7 };
             MergeSortWorseCase.Sort(worstCase);
 
 
@@ -441,7 +542,7 @@ namespace ConsoleApplication1
             //====================================================================
             //Another Case
             //====================================================================
-            var anotherCase = new int[] { 2, 0, 6, 4, 1, 3, 5, 7 };
+            var anotherCase = new[] { 2, 0, 6, 4, 1, 3, 5, 7 };
 
             sw.Start();
             MergeSort.Sort(anotherCase);
@@ -462,7 +563,7 @@ namespace ConsoleApplication1
             //====================================================================
             //Sorted Case
             //====================================================================
-            var sortedCase = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
+            var sortedCase = new[] { 0, 1, 2, 3, 4, 5, 6, 7 };
 
             sw.Start();
             MergeSort.Sort(sortedCase);
